@@ -61,7 +61,6 @@
                                 <th>Nombre</th>
                                 <th>Tutor</th>
                                 <th>Evolución médica</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="petTableBody">
@@ -102,11 +101,9 @@
                             <label for="petEvolucion" class="form-label">Evolución Médica</label>
                             <textarea class="form-control" id="petEvolution" rows="3" placeholder="Ej: Paciente presenta mejoría. Se administró vacuna antirrábica..." required></textarea>
                         </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="savePetBtn">Guardar</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="savePetBtn">Guardar</button>
                 </div>
             </div>
         </div>

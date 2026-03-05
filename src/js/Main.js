@@ -1,67 +1,75 @@
 import { validateLogin } from "./Auth.js";
+import { Mascota } from "./Clases.js";
 
-let vetActive = null;
+let vetActivo = null;
 
-// Referencias a los elementos del DOM
-const loginForm    = document.getElementById('loginForm');
-const loginSection = document.getElementById('loginSection');
-const dashboard    = document.getElementById('dashboard');
-const loginError   = document.getElementById('loginError');
-const emailUser    = document.getElementById('email');
+// Referencias al DOM
+const formularioLogin = document.getElementById('loginForm');
+const seccionLogin    = document.getElementById('loginSection');
+const panel           = document.getElementById('dashboard');
+const errorLogin      = document.getElementById('loginError');
+const emailUsuario    = document.getElementById('email');
 
-// Maneja el submit del formulario de login
-loginForm.addEventListener('submit', (e) => {
+// Submit del login
+formularioLogin.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const inputEmail    = document.getElementById('email').value;
-    const inputPassword = document.getElementById('password').value;
-    const userLabel     = document.getElementById('userLabel');
+    const correoIngresado    = document.getElementById('email').value;
+    const contrasenaIngresada = document.getElementById('password').value;
+    const etiquetaUsuario     = document.getElementById('userLabel');
 
-    // Busca al veterinario cuyas credenciales coincidan
-    const veterinarioEncontrado = validateLogin(inputEmail, inputPassword);
+    const veterinarioEncontrado = validateLogin(correoIngresado, contrasenaIngresada);
 
     if (veterinarioEncontrado) {
-        // Credenciales válidas → muestra el dashboard
-        loginSection.classList.add('d-none');
-        dashboard.classList.remove('d-none');
-        userLabel.textContent = emailUser.value;
-        loginError.classList.add('d-none');
-        let vetActive = veterinarioEncontrado;
+        seccionLogin.classList.add('d-none');
+        panel.classList.remove('d-none');
+        etiquetaUsuario.textContent = "Bienvenido " + emailUsuario.value;
+        errorLogin.classList.add('d-none');
+        vetActivo = veterinarioEncontrado;
     } else {
-        // Credenciales inválidas → muestra mensaje de error
-        loginError.classList.remove('d-none');
+        errorLogin.classList.remove('d-none');
     }
 });
 
 
-// --- LÓGICA DE REGISTRO DE MASCOTAS ---
+// Referencias del formulario de mascotas
+const formularioMascota = document.getElementById('petForm');
+const nombreMascota     = document.getElementById('petName');
+const tutorMascota      = document.getElementById('petOwner');
+const evolucionMascota  = document.getElementById('petEvolution');
+const cuerpoTabla       = document.getElementById('petTableBody');
 
-//    - El formulario (id: 'petForm')
-const petForm = document.getElementById('petForm');
-//    - Los inputs (ids: 'petName', 'petSpecies', 'petBreed', 'petAge', 'petOwner')
-const petName = document.getElementById('petName');
-const petOwner = document.getElementById('petOwner');
-const petEvolution = document.getElementById('petEvolution');
+// Renderiza la lista de mascotas del veterinario activo
+const actualizarTabla = () => {
+    cuerpoTabla.innerHTML = '';
 
-//    - El cuerpo de la tabla donde mostraremos las mascotas (id: 'petTableBody')
+    vetActivo.obtenerPacientes().forEach((mascota, indice) => {
+        cuerpoTabla.innerHTML += `<tr>
+            <td>${indice + 1}</td>
+            <td>${mascota.nombre}</td>
+            <td>${mascota.tutor}</td>
+            <td>${mascota.condicionMedica}</td>
+        </tr>`;
+    });
+}
 
+// Submit del formulario de nueva mascota
+formularioMascota.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-// 3. Agregar un escuchador de evento (addEventListener) tipo 'submit' al 'petForm'
-//    (OJO: Recuerda el e.preventDefault() para que no recargue la página)
+    const nuevaMascota = new Mascota(nombreMascota.value, tutorMascota.value, evolucionMascota.value);
+    vetActivo.agregarMascota(nuevaMascota);
+    actualizarTabla();
+    formularioMascota.reset();
 
-    // --- DENTRO DEL EVENTO DEL FORMULARIO ---
-    
-    // 4. Extraer los valores (.value) de todos los inputs de la mascota.
-    
-    // 5. Instanciar un nuevo objeto de la clase Mascota con esos valores:
-    //    const nuevaMascota = new Mascota(valorNombre, valorEspecie, ...etc);
-    
-    // 6. Usar el método 'agregarMascota' del 'veterinarioActivo' para guardar la nueva mascota.
-    //    veterinarioActivo.agregarMascota(nuevaMascota);
-    
-    // 7. Llamar a una función (que crearemos después) llamada 'actualizarTabla()'.
-    
-    // 8. Limpiar el formulario usando: petForm.reset();
-    
-    // 9. (Opcional - Bootstrap) Cerrar el modal programáticamente o dejar que el usuario lo cierre.
+    const modal = bootstrap.Modal.getInstance(document.getElementById('petModal'));
+    modal.hide();
+});
 
+// Cerrar sesión
+const btnCerrarSesion = document.getElementById('logoutBtn');
+
+btnCerrarSesion.addEventListener('click', () => {
+    panel.classList.add('d-none');
+    seccionLogin.classList.remove('d-none');
+});

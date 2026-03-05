@@ -18,7 +18,7 @@ class Veterinario {
 }
 
 // Clase Mascota
-class Mascota {
+export class Mascota {
     constructor(nombre, tutor, condicionMedica) {
         this.nombre = nombre;
         this.tutor = tutor;
