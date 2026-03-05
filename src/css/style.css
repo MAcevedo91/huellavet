@@ -1,0 +1,11 @@
+/* Fondo degradado solo en login */
+body {
+    background: linear-gradient(to bottom, #ffffff, #b3e5fc);
+    min-height: 100vh;
+}
+
+/* Dashboard: fondo neutro */
+#dashboard {
+    background: #f1f5f9;
+    min-height: 100vh;
+}
